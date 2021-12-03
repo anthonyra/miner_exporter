@@ -198,6 +198,8 @@ def stats(miner: MinerJSONRPC):
             LEDGER_PENALTY.labels('ledger_penalties', 'dkg', ledger_entry['name'], ledger_entry['address']).set(ledger_entry['dkg_penalty'])
             LEDGER_PENALTY.labels('ledger_penalties', 'performance', ledger_entry['name'], ledger_entry['address']).set(ledger_entry['performance_penalty'])
             LEDGER_PENALTY.labels('ledger_penalties', 'total', ledger_entry['name'], ledger_entry['address']).set(ledger_entry['total_penalty'])
+            if ledger_entry['tenure_penalty'] > 0:
+                LEDGER_PENALTY.labels('ledger_penalties', 'perf_tenure_ratio', ledger_entry['name'], ledger_entry['address']).set((ledger_entry['performance_penalty'] + ledger_entry['dkg_penalty'])/ledger_entry['tenure_penalty'])
             HEARTBEAT.labels(ledger_entry['name'], ledger_entry['address']).set(ledger_entry['last_heartbeat'])
 
     if hbbft_perf is not None:
