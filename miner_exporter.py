@@ -210,6 +210,8 @@ def stats(miner: MinerJSONRPC):
         bba_tot = hbbft_perf['blocks_since_epoch']
         seen_tot = hbbft_perf['max_seen']
 
+        position=1
+
         for member in hbbft_perf['consensus_members']:
             if member['address'] == addr or ALL_HBBFT:
                 HBBFT_PERF.labels('hbbft_perf','Penalty', member['name']).set(member['penalty'])
@@ -220,6 +222,8 @@ def stats(miner: MinerJSONRPC):
                 HBBFT_PERF.labels('hbbft_perf','BBA_Last', member['name']).set(member['last_bba'])
                 HBBFT_PERF.labels('hbbft_perf','Seen_Last', member['name']).set(member['last_seen'])
                 HBBFT_PERF.labels('hbbft_perf','Tenure', member['name']).set(member['tenure'])
+                HBBFT_PERF.labels('hbbft_perf','CG_Position', member['name']).set(position)
+            position += 1
 
     if peer_book_info is not None:
         connections = peer_book_info[0]['connection_count']
