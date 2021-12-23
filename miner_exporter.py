@@ -31,8 +31,6 @@ ALL_PENALTIES = os.environ.get('ALL_PENALTIES', "").lower() in ("true", "t", "1"
 
 # prometheus exporter types Gauge,Counter,Summary,Histogram,Info and Enum
 SCRAPE_TIME = prometheus_client.Summary('validator_scrape_time', 'Time spent collecting miner data')
-CHAIN_STATS = prometheus_client.Gauge('chain_stats',
-                              'Stats about the global chain', ['resource_type'])
 VAL = prometheus_client.Gauge('validator_height',
                               "Height of the validator's blockchain",
                               ['resource_type','validator_name'])
@@ -169,13 +167,8 @@ def stats(miner: MinerJSONRPC):
     #
 
     if height_info is not None:
-        # If `sync_height` is present then the validator is
-        # syncing and behind, otherwise it is in sync.
-        chain_height = height_info['height']
-        val_height = height_info.get('sync_height', chain_height)
-
-        VAL.labels('Height', name).set(val_height)
-        CHAIN_STATS.labels('Height').set(chain_height)
+        VAL.labels('Height', name).set(height_info['height'])
+        VAL.labels('Epoch', name).set(height_info['epoch'])
 
     if in_consensus is not None:
         INCON.labels(name).set(in_consensus)
