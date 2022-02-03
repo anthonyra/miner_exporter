@@ -10,12 +10,16 @@ Note [port 9825 is the 'reserved' port for this specific exporter](https://githu
 Using the docker file, you can run this with Docker or docker-compose! Both of these expose Prometheus on 9825, feel free to choose your own port. 
 
 ### Build docker image
-Build the docker image and add it to your local image repository
-```docker build -t miner_exporter:latest . ```
+Clone the repository and build the image to add it to your local repository
+```
+git clone https://github.com/PaulVMo/miner_exporter
+cd miner_exporter
+docker build -t miner_exporter:latest . 
+```
 
 ### Docker client
 ```
-docker run -p 9825:9825 --name miner_exporter -v /var/run/docker.sock:/var/run/docker.sock miner_exporter:latest
+docker run -p 9825:9825 --network host --restart always --name miner_exporter -v /var/run/docker.sock:/var/run/docker.sock miner_exporter:latest
 ```
 
 ### Docker-Compose
@@ -30,10 +34,11 @@ services:
   miner_exporter:
     image: miner_exporter:latest
     container_name: miner_exporter
+    network_mode: host
+    restart: always
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-    - "9825:9825"
+
     # Optional parameters
     environment:
     - UPDATE_PERIOD=25
