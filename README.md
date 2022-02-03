@@ -7,11 +7,15 @@ Note [port 9825 is the 'reserved' port for this specific exporter](https://githu
 
 
 ## Running via Docker
-Using the docker file, you can run this with Docker or docker-compose! Both of these expose Prometheus on 9825, feel free to choose your own port. The images are hosted on both [GHCR](https://github.com/users/tedder/packages/container/package/miner_exporter) and [Dockerhub](https://hub.docker.com/r/tedder42/miner_exporter).
+Using the docker file, you can run this with Docker or docker-compose! Both of these expose Prometheus on 9825, feel free to choose your own port. 
+
+### Build docker image
+Build the docker image and add it to your local image repository
+```docker build -t miner_exporter:latest . ```
 
 ### Docker client
 ```
-docker run -p 9825:9825 --name miner_exporter -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/tedder/miner_exporter:latest
+docker run -p 9825:9825 --name miner_exporter -v /var/run/docker.sock:/var/run/docker.sock miner_exporter:latest
 ```
 
 ### Docker-Compose
@@ -24,12 +28,15 @@ services:
     container_name: validator
 ...
   miner_exporter:
-    image: ghcr.io/tedder/miner_exporter:latest
+    image: miner_exporter:latest
     container_name: miner_exporter
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     ports:
     - "9825:9825"
+    # Optional parameters
+    environment:
+    - UPDATE_PERIOD=25
 ```
 
 ## Running locally
