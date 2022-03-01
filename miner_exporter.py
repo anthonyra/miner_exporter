@@ -185,6 +185,7 @@ def stats(miner: MinerJSONRPC):
     if penalty_ledger is not None:
         # Clear metric so unstaked validators drop off
         LEDGER_PENALTY.clear()
+        HEARTBEAT.clear()
 
         for address, ledger_entry in penalty_ledger.items():
             LEDGER_PENALTY.labels('ledger_penalties', 'tenure', ledger_entry['name'], ledger_entry['address']).set(ledger_entry['tenure_penalty'])
