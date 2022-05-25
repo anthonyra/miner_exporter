@@ -72,6 +72,9 @@ class MinerJSONRPC:
     def hbbft_perf(self) -> typing.List[dict]:
         return self.rpc_call('hbbft_perf')
 
+    def dkg_next(self) -> typing.List[dict]:
+        return self.rpc_call('dkg_next')
+
 def safe_get_json(url: str):
   try:
     ret = requests.get(url)

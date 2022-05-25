@@ -1,5 +1,5 @@
 FROM python:3-alpine
-LABEL org.opencontainers.image.source https://github.com/tedder/miner_exporter
+LABEL org.opencontainers.image.source https://github.com/PaulVMo/miner_exporter
 ENV PYTHONUNBUFFERED=1
 EXPOSE 9825
 

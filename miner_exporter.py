@@ -63,6 +63,8 @@ if COLLECT_SYSTEM_USAGE:
     SYSTEM_USAGE = prometheus_client.Gauge('system_usage',
                                            'Hold current system resource usage',
                                            ['resource_type','hostname'])
+DKG = prometheus_client.Gauge('validator_dkg_status',
+                              'DKG status of the blockchain according to the validator',['resource_type','validator_name'],)
 
 # hostname of machine for use in system stats
 hostname = os.uname()[1]
@@ -162,6 +164,12 @@ def stats(miner: MinerJSONRPC):
     except:
         log.error("peer book self fetch failure")
 
+    dkg_next = None
+    try:
+        dkg_next = miner.dkg_next()
+    except:
+        log.error("dkg next failure")
+
     #
     # Parse results, update gauges.
     #
@@ -225,6 +233,14 @@ def stats(miner: MinerJSONRPC):
         sessions = len(peer_book_info[0]['sessions'])
         SESSIONS.labels('sessions', name).set(sessions)
 
+    if dkg_next is not None:
+        if "blocks_to_election" in dkg_next:
+            DKG.labels('blocks_to_election', name).set(dkg_next['blocks_to_election'])
+        else:
+            DKG.labels('blocks_to_election', name).set(0)
+        if "blocks_to_restart" in dkg_next:
+            DKG.labels('blocks_to_restart', name).set(dkg_next['blocks_to_restart'])
+        DKG.labels('running', name).set(dkg_next['running'])
 
 if __name__ == '__main__':
   prometheus_client.start_http_server(MINER_EXPORTER_PORT)
