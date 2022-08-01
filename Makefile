@@ -4,7 +4,7 @@ PYTHON_SRCS= \
 
 PYTHON?= python3
 
-DESTROOT?= /home/helium/validator_exporter
+DESTROOT?= /opt/miner/validator_exporter
 
 BUILT_SERVICE= build/validator_exporter.service
 STARTUP= build/run
