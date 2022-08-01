@@ -4,7 +4,7 @@ PYTHON_SRCS= \
 
 PYTHON?= python3
 
-DESTROOT?= /opt/miner/validator_exporter
+DESTROOT?= /usr/local/bin/validator_exporter
 
 BUILT_SERVICE= build/validator_exporter.service
 STARTUP= build/run
